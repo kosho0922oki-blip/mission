@@ -24,7 +24,7 @@ const clues=[
 {id:'a7',num:7,label:'ちょこ',dir:'a',r:5,c:5,len:10},
 {id:'a8',num:8,label:'うさぎ',dir:'a',r:7,c:5,len:3},
 {id:'a10',num:10,label:'ぴの',dir:'a',r:9,c:6,len:9},
-{id:'a11',num:11,label:'ちろちろ',dir:'a',r:11,c:10,len:6},
+{id:'a11',num:11,label:'ちるちる',dir:'a',r:11,c:10,len:6},
 {id:'d1',num:1,label:'もつ',dir:'d',r:0,c:0,len:8},
 {id:'d2',num:2,label:'いくちゃん',dir:'d',r:0,c:6,len:8},
 {id:'d4',num:4,label:'ちゃーむ',dir:'d',r:1,c:12,len:5},
@@ -38,7 +38,7 @@ const cell=40,margin=11,svgNS='http://www.w3.org/2000/svg';const svg=document.cr
 function add(tag,attrs,txt){let el=document.createElementNS(svgNS,tag);Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));if(txt!==undefined)el.textContent=txt;svg.appendChild(el);return el}
 const cells={};const ordered=[...boxKeys].sort((a,b)=>{const [ar,ac]=a.split(',').map(Number),[br,bc]=b.split(',').map(Number);return ar-br||ac-bc});
 ordered.forEach(k=>{const [r,c]=k.split(',').map(Number),x=margin+c*cell,y=margin+r*cell;const highlight=highlights[k];add('rect',{x,y,width:cell,height:cell,rx:2,fill:highlight?'#ffe6a6':'#ffffff',stroke:'#24323c','stroke-width':1.7});if(highlight){add('circle',{cx:x+cell-8,cy:y+cell-8,r:6.5,fill:'#deb96b'});add('text',{x:x+cell-8,y:y+cell-5,'text-anchor':'middle','font-size':8,'font-weight':900,fill:'#6e4610'},String(highlight))}const text=add('text',{x:x+cell/2,y:y+cell/2+9,'text-anchor':'middle','font-size':27,'font-weight':900,fill:'#007a68'},fixed[k]||'');cells[k]=text});
-clues.forEach(o=>{const k=`${o.r},${o.c}`;const [r,c]=k.split(',').map(Number);add('text',{x:margin+c*cell+3,y:margin+r*cell-2,'font-size':12,'font-weight':900,fill:'#283a43'},String(o.num))});
+clues.forEach(o=>{const k=`${o.r},${o.c}`;const [r,c]=k.split(',').map(Number);add('text',{x:margin+c*cell+4,y:margin+r*cell+11,'font-size':10,'font-weight':900,fill:'#283a43'},String(o.num))});
 $('#cross').appendChild(svg);
 function splitKana(t,o){const normalized=t.normalize('NFKC').replace(/\s/g,'').replace(/[ァ-ヶ]/g,ch=>String.fromCharCode(ch.charCodeAt(0)-96));const letters=Array.from(normalized);/* 黄色い⑤はタテ4の4マス目。ここだけ『じゅ』を1マスにする。 */if(o.id==='d4'&&letters[3]==='じ'&&letters[4]==='ゅ'){letters.splice(3,2,'じゅ')}return letters}
 for(const o of clues){const wrap=document.createElement('div');wrap.className='clue';const label=document.createElement('label');label.setAttribute('for',o.id);label.textContent=`${o.num}　${o.label}`;const inp=document.createElement('input');inp.id=o.id;inp.setAttribute('autocomplete','off');inp.setAttribute('autocorrect','off');inp.setAttribute('spellcheck','false');inp.setAttribute('placeholder',`${o.len}マス`);inp.setAttribute('aria-label',`${o.dir==='a'?'ヨコ':'タテ'}${o.num} ${o.label}`);inp.addEventListener('input',update);wrap.append(label,inp);(o.dir==='a'?$('#across'):$('#down')).append(wrap)}
